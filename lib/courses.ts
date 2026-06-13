@@ -25,8 +25,6 @@ export interface SignalCondition {
   signalValue: string;
 }
 
-// A conditional route fires when ANY of its signal conditions match.
-// Conditions are evaluated top-to-bottom; the first match wins.
 export interface ConditionalRoute {
   anyOf: SignalCondition[];
   destinationCourseId: string;
@@ -34,9 +32,9 @@ export interface ConditionalRoute {
 }
 
 export interface RouteConfig {
-  conditionalRoutes?: ConditionalRoute[]; // signal-based overrides, checked first
-  destinationCourseId: string;            // fallback destination
-  pitchAngle: string;                     // fallback pitch
+  conditionalRoutes?: ConditionalRoute[];
+  destinationCourseId: string;
+  pitchAngle: string;
 }
 
 export type RouteMap = Record<string, RouteConfig>;
@@ -52,16 +50,26 @@ export interface Signal {
   options: SignalOption[];
 }
 
+// ─── Source courses (shown in dropdown) ──────────────────────────────────────
+
+export const SOURCE_IDS = [
+  "cse",
+  "cse-aiml",
+  "cse-core-google",
+  "bca",
+  "bba",
+] as const;
+
 // ─── Course Data ─────────────────────────────────────────────────────────────
-// Replace placeholder content here with real TIU programme details.
 
 export const courses: Course[] = [
-  // ── B.Tech programmes ────────────────────────────────────────────────────
+
+  // ── B.Tech CSE: source courses ─────────────────────────────────────────────
 
   {
     id: "cse",
-    name: "B.Tech CSE",
-    degree: "Bachelor of Technology",
+    name: "Regular CSE",
+    degree: "B.Tech Computer Science (CSE)",
     tagline: "Build the systems that power the world",
     realStrengths: [
       "Broad software engineering foundation covering systems, networks, and security",
@@ -84,37 +92,12 @@ export const courses: Course[] = [
   },
 
   {
-    id: "cse-google-iit",
-    name: "B.Tech CSE (Google Cloud & IIT KGP)",
-    degree: "Bachelor of Technology",
-    tagline: "Industry-grade CSE, backed by Google and IIT Kharagpur",
-    realStrengths: [
-      "Google Cloud certifications integrated into the curriculum",
-      "Joint modules designed with IIT Kharagpur faculty",
-      "Live project exposure on Google Cloud Platform from year 2",
-      "Preferred hiring pipeline with Google Cloud partner companies",
-    ],
-    labs: ["Google Cloud Lab", "IIT KGP Joint Research Studio", "Cloud Architecture Centre"],
-    curriculumHighlights: [
-      "Data Structures & Algorithms",
-      "Operating Systems",
-      "Database Management",
-      "Google Cloud Fundamentals",
-      "IIT KGP: Advanced Software Engineering",
-      "Cloud DevOps & Architecture",
-      "Industry Capstone (Google Cloud)",
-    ],
-    overlapNote:
-      "90% shared core with B.Tech CSE in years 1–2. Diverges from semester 5 with Google Cloud and IIT KGP specialisation modules.",
-  },
-
-  {
     id: "cse-aiml",
-    name: "B.Tech CSE (AI & ML)",
-    degree: "Bachelor of Technology",
+    name: "Regular CSE AI-ML",
+    degree: "B.Tech Computer Science (CSE)",
     tagline: "Engineer the intelligence of tomorrow",
     realStrengths: [
-      "Dedicated AI/ML lab with GPU clusters for model training",
+      "Dedicated AI/ML lab with GPU clusters for hands-on model training",
       "Specialised curriculum covering deep learning, NLP, and computer vision",
       "Industry projects from year 2 onwards",
       "Strong pipeline to AI-first startups and product companies",
@@ -130,91 +113,16 @@ export const courses: Course[] = [
       "Capstone Industry Project",
     ],
     overlapNote:
-      "85% shared core with B.Tech CSE in years 1–2. AI/ML specialisation diverges from semester 5.",
-  },
-
-  {
-    id: "cse-aiml-google",
-    name: "B.Tech CSE AI & ML (Google Cloud)",
-    degree: "Bachelor of Technology",
-    tagline: "Build AI at scale — with Google infrastructure from day one",
-    realStrengths: [
-      "AI/ML curriculum enhanced with Google Cloud AI tools and certification tracks",
-      "Hands-on VertexAI, BigQuery ML, and TensorFlow on GCP",
-      "Live project deployments on Google Cloud infrastructure",
-      "Premium hiring access to Google Cloud partner ecosystem",
-    ],
-    labs: ["AI & ML Research Lab", "Google Cloud AI Studio", "MLOps Deployment Centre"],
-    curriculumHighlights: [
-      "Machine Learning Theory",
-      "Deep Learning & Neural Networks",
-      "Google Cloud AI Platform",
-      "NLP & Computer Vision",
-      "MLOps on Google Cloud",
-      "AI Product Development",
-      "Industry Capstone (GCP)",
-    ],
-    overlapNote:
-      "Shares ~85% core with B.Tech CSE AI & ML in years 1–2. Google Cloud track adds deployment and productionisation skills unavailable in the base programme.",
-  },
-
-  {
-    id: "cse-ds",
-    name: "B.Tech CSE (Data Science)",
-    degree: "Bachelor of Technology",
-    tagline: "Turn raw data into decisions that matter",
-    realStrengths: [
-      "Statistics-first curriculum grounded in real-world data problems",
-      "Business analytics and data storytelling built into the core",
-      "Live project partnerships with analytics firms from year 3",
-      "Dual skill set: software engineering + domain-level analytics",
-    ],
-    labs: ["Data Analytics Lab", "Business Intelligence Studio", "Statistical Computing Centre"],
-    curriculumHighlights: [
-      "Probability & Statistics",
-      "Data Wrangling & Visualisation",
-      "Machine Learning Applications",
-      "Big Data Technologies",
-      "Business Intelligence",
-      "Predictive Modelling",
-      "Industry Capstone",
-    ],
-    overlapNote:
-      "75% shared core with B.Tech CSE AI & ML in years 1–2. Diverges strongly from year 3 with analytics and domain focus.",
-  },
-
-  {
-    id: "cse-cloud",
-    name: "B.Tech CSE (Cloud Computing)",
-    degree: "Bachelor of Technology",
-    tagline: "Architect the cloud — at any scale",
-    realStrengths: [
-      "Deep specialisation in cloud architecture, DevOps, and distributed systems",
-      "Multi-cloud exposure: AWS, Azure, and Google Cloud in the curriculum",
-      "Industry certifications embedded into coursework",
-      "Strong placement pipeline to cloud and infrastructure companies",
-    ],
-    labs: ["Multi-Cloud Lab", "DevOps Automation Studio", "Distributed Systems Centre"],
-    curriculumHighlights: [
-      "Data Structures & Algorithms",
-      "Cloud Architecture & Design",
-      "AWS & Azure Fundamentals",
-      "DevOps & CI/CD Pipelines",
-      "Containerisation & Kubernetes",
-      "Cloud Security",
-      "Capstone Cloud Project",
-    ],
-    overlapNote:
-      "80% shared core with B.Tech CSE in years 1–2. Cloud specialisation begins semester 5 with deep infra focus.",
+      "75% shared core with CSE Data Science in years 1–2. Data Science diverges strongly from year 3 with statistics and business analytics focus.",
   },
 
   {
     id: "cse-core-google",
-    name: "B.Tech CSE Core (Google Cloud & IIT KGP)",
-    degree: "Bachelor of Technology",
+    name: "CSE Core (Google Cloud & IIT KGP)",
+    degree: "B.Tech Computer Science (CSE)",
     tagline: "IIT-calibre core engineering, cloud-ready from graduation",
     realStrengths: [
-      "Curriculum co-designed with IIT Kharagpur — the gold standard in Indian engineering education",
+      "Curriculum co-designed with IIT Kharagpur",
       "Google Cloud certification pathway embedded across all 4 years",
       "Research exposure through IIT KGP joint lab access",
       "Top-tier placement outcomes via combined industry-academia network",
@@ -230,15 +138,15 @@ export const courses: Course[] = [
       "Joint Capstone Project",
     ],
     overlapNote:
-      "Shares the same foundational engineering core as B.Tech CSE in years 1–2. IIT KGP modules and Google Cloud track activate from semester 3.",
+      "Shares the same foundational engineering core as Regular CSE in years 1–2. IIT KGP modules and Google Cloud track activate from semester 3.",
   },
 
-  // ── BCA programmes ────────────────────────────────────────────────────────
+  // ── BCA: source courses ────────────────────────────────────────────────────
 
   {
     id: "bca",
-    name: "BCA",
-    degree: "Bachelor of Computer Applications",
+    name: "Regular BCA",
+    degree: "Bachelor of Computer Applications (BCA)",
     tagline: "Your launchpad into the software world",
     realStrengths: [
       "Practical, application-focused curriculum for quick industry entry",
@@ -257,40 +165,15 @@ export const courses: Course[] = [
       "Final Project",
     ],
     overlapNote:
-      "80% shared core with BCA (DS & AI with IBM) in years 1–2. The IBM specialisation diverges from semester 4.",
+      "80% shared core with BCA Data Science & AI (IBM) in years 1–2. The IBM specialisation diverges from semester 4.",
   },
 
-  {
-    id: "bca-ds-ai-ibm",
-    name: "BCA (Data Science & AI with IBM)",
-    degree: "Bachelor of Computer Applications",
-    tagline: "BCA + IBM's AI toolkit — a combination the market is hiring for",
-    realStrengths: [
-      "IBM-certified AI and Data Science modules built into the degree",
-      "Hands-on IBM Watson and IBM Cloud projects",
-      "Direct exposure to IBM hiring channels and partner companies",
-      "Practical AI skills without a 4-year B.Tech commitment",
-    ],
-    labs: ["IBM AI Lab", "Data Science Studio", "IBM Cloud Practice Centre"],
-    curriculumHighlights: [
-      "Programming & Python",
-      "IBM Data Science Fundamentals",
-      "Machine Learning with IBM Watson",
-      "Data Visualisation",
-      "IBM Cloud Essentials",
-      "AI Applications Development",
-      "IBM Capstone Project",
-    ],
-    overlapNote:
-      "80% shared core with BCA in years 1–2. IBM AI & Data Science specialisation makes years 2–3 substantially different.",
-  },
-
-  // ── BBA programmes ────────────────────────────────────────────────────────
+  // ── BBA: source courses ────────────────────────────────────────────────────
 
   {
     id: "bba",
-    name: "BBA",
-    degree: "Bachelor of Business Administration",
+    name: "Regular BBA",
+    degree: "Bachelor of Business Administration (BBA)",
     tagline: "Develop the business mind of tomorrow",
     realStrengths: [
       "Comprehensive business curriculum covering finance, marketing, and operations",
@@ -309,13 +192,144 @@ export const courses: Course[] = [
       "Final Year Project",
     ],
     overlapNote:
-      "85% shared core with BBA (Business Analytics with IBM) in years 1–2. Analytics specialisation diverges strongly in year 3.",
+      "85% shared core with BBA Business Analytics (IBM) in years 1–2. Analytics specialisation diverges strongly in year 3.",
+  },
+
+  // ── B.Tech CSE: target courses (not shown in dropdown) ────────────────────
+
+  {
+    id: "cse-google-iit",
+    name: "CSE (Google Cloud & IIT KGP)",
+    degree: "B.Tech Computer Science (CSE)",
+    tagline: "Industry-grade CSE, backed by Google and IIT Kharagpur",
+    realStrengths: [
+      "Google Cloud certifications integrated into the curriculum",
+      "Joint modules designed with IIT Kharagpur faculty",
+      "Live project exposure on Google Cloud Platform from year 2",
+      "Preferred hiring pipeline with Google Cloud partner companies",
+    ],
+    labs: ["Google Cloud Lab", "IIT KGP Joint Research Studio", "Cloud Architecture Centre"],
+    curriculumHighlights: [
+      "Data Structures & Algorithms",
+      "Operating Systems",
+      "Database Management",
+      "Google Cloud Fundamentals",
+      "IIT KGP: Advanced Software Engineering",
+      "Cloud DevOps & Architecture",
+      "Industry Capstone (Google Cloud)",
+    ],
+    overlapNote:
+      "90% shared core with Regular CSE in years 1–2. Diverges from semester 5 with Google Cloud and IIT KGP specialisation modules.",
   },
 
   {
+    id: "cse-aiml-google",
+    name: "CSE AI-ML (Google Cloud)",
+    degree: "B.Tech Computer Science (CSE)",
+    tagline: "Build AI at scale — with Google infrastructure from day one",
+    realStrengths: [
+      "AI/ML curriculum enhanced with Google Cloud AI tools and certification tracks",
+      "Hands-on VertexAI, BigQuery ML, and TensorFlow on GCP",
+      "Live project deployments on Google Cloud infrastructure",
+      "Premium hiring access to Google Cloud partner ecosystem",
+    ],
+    labs: ["AI & ML Research Lab", "Google Cloud AI Studio", "MLOps Deployment Centre"],
+    curriculumHighlights: [
+      "Machine Learning Theory",
+      "Deep Learning & Neural Networks",
+      "Google Cloud AI Platform",
+      "NLP & Computer Vision",
+      "MLOps on Google Cloud",
+      "AI Product Development",
+      "Industry Capstone (GCP)",
+    ],
+    overlapNote:
+      "Shares ~85% core with Regular CSE AI-ML in years 1–2. Google Cloud track adds deployment and productionisation skills unavailable in the base programme.",
+  },
+
+  {
+    id: "cse-ds",
+    name: "CSE Data Science",
+    degree: "B.Tech Computer Science (CSE)",
+    tagline: "Turn raw data into decisions that matter",
+    realStrengths: [
+      "Statistics-first curriculum grounded in real-world data problems",
+      "Business analytics and data storytelling built into the core",
+      "Live project partnerships with analytics firms from year 3",
+      "Dual skill set: software engineering + domain-level analytics",
+    ],
+    labs: ["Data Analytics Lab", "Business Intelligence Studio", "Statistical Computing Centre"],
+    curriculumHighlights: [
+      "Probability & Statistics",
+      "Data Wrangling & Visualisation",
+      "Machine Learning Applications",
+      "Big Data Technologies",
+      "Business Intelligence",
+      "Predictive Modelling",
+      "Industry Capstone",
+    ],
+    overlapNote:
+      "75% shared core with CSE AI-ML in years 1–2. Diverges strongly from year 3 with analytics and domain focus.",
+  },
+
+  {
+    id: "cse-cloud",
+    name: "CSE Cloud Computing",
+    degree: "B.Tech Computer Science (CSE)",
+    tagline: "Architect the cloud — at any scale",
+    realStrengths: [
+      "Deep specialisation in cloud architecture, DevOps, and distributed systems",
+      "Multi-cloud exposure: AWS, Azure, and Google Cloud in the curriculum",
+      "Industry certifications embedded into coursework",
+      "Strong placement pipeline to cloud and infrastructure companies",
+    ],
+    labs: ["Multi-Cloud Lab", "DevOps Automation Studio", "Distributed Systems Centre"],
+    curriculumHighlights: [
+      "Data Structures & Algorithms",
+      "Cloud Architecture & Design",
+      "AWS & Azure Fundamentals",
+      "DevOps & CI/CD Pipelines",
+      "Containerisation & Kubernetes",
+      "Cloud Security",
+      "Capstone Cloud Project",
+    ],
+    overlapNote:
+      "80% shared core with CSE AI-ML in years 1–2. Cloud specialisation begins semester 5 with deep infrastructure focus.",
+  },
+
+  // ── BCA: target courses ────────────────────────────────────────────────────
+
+  {
+    id: "bca-ds-ai-ibm",
+    name: "BCA Data Science & AI (IBM)",
+    degree: "Bachelor of Computer Applications (BCA)",
+    tagline: "BCA + IBM's AI toolkit — a combination the market is hiring for",
+    realStrengths: [
+      "IBM-certified AI and Data Science modules built into the degree",
+      "Hands-on IBM Watson and IBM Cloud projects",
+      "Direct exposure to IBM hiring channels and partner companies",
+      "Practical AI skills without a 4-year B.Tech commitment",
+    ],
+    labs: ["IBM AI Lab", "Data Science Studio", "IBM Cloud Practice Centre"],
+    curriculumHighlights: [
+      "Programming & Python",
+      "IBM Data Science Fundamentals",
+      "Machine Learning with IBM Watson",
+      "Data Visualisation",
+      "IBM Cloud Essentials",
+      "AI Applications Development",
+      "IBM Capstone Project",
+    ],
+    overlapNote:
+      "80% shared core with Regular BCA in years 1–2. IBM AI & Data Science specialisation makes years 2–3 substantially different.",
+  },
+
+  // ── BBA: target courses ────────────────────────────────────────────────────
+
+  {
     id: "bba-analytics-ibm",
-    name: "BBA (Business Analytics with IBM)",
-    degree: "Bachelor of Business Administration",
+    name: "BBA Business Analytics (IBM)",
+    degree: "Bachelor of Business Administration (BBA)",
     tagline: "Business intuition, backed by data science — powered by IBM",
     realStrengths: [
       "Business analytics curriculum co-developed with IBM",
@@ -334,15 +348,14 @@ export const courses: Course[] = [
       "Decision Sciences",
     ],
     overlapNote:
-      "85% shared core with BBA in years 1–2. IBM analytics tools and data-driven modules begin from semester 4.",
+      "85% shared core with Regular BBA in years 1–2. IBM analytics tools and data-driven modules begin from semester 4.",
   },
 ];
 
 // ─── Route Map ───────────────────────────────────────────────────────────────
-// Signal routing: for each source course, check conditionalRoutes top-to-bottom.
-// First anyOf match wins. Falls back to destinationCourseId if nothing matches.
 
 export const routeMap: RouteMap = {
+  // Category: B.Tech CSE
   cse: {
     destinationCourseId: "cse-google-iit",
     pitchAngle:
@@ -367,12 +380,12 @@ export const routeMap: RouteMap = {
         ],
         destinationCourseId: "cse-cloud",
         pitchAngle:
-          "Builders headed to industry are the exact profile cloud infrastructure companies hire for. AI & ML teaches you the models — Cloud Computing teaches you to deploy them at scale, run them reliably, and get hired by the companies doing it at Google/AWS/Azure level.",
+          "Builders headed to industry are the profile cloud infrastructure companies hire for. CSE AI-ML teaches you the models — Cloud Computing teaches you to deploy them at scale, run them reliably, and get hired by the companies doing it at Google/AWS/Azure level.",
       },
     ],
     destinationCourseId: "cse-aiml-google",
     pitchAngle:
-      "If you're already picking CSE AI & ML, the Google Cloud track costs nothing extra and is the difference between training models locally and deploying them in production. The first two years are identical — but years 3 and 4 put you in a completely different hiring bracket.",
+      "If you're already picking CSE AI-ML, the Google Cloud track costs nothing extra and is the difference between training models locally and deploying them in production. The first two years are identical — but years 3 and 4 put you in a completely different hiring bracket.",
   },
 
   "cse-core-google": {
@@ -381,12 +394,14 @@ export const routeMap: RouteMap = {
       "The Google Cloud foundation you'd get in CSE Core is even more powerful inside the AI & ML programme — because you're not just using the cloud, you're building the AI systems that run on it. Same Google infrastructure, dramatically higher ceiling.",
   },
 
+  // Category: BCA
   bca: {
     destinationCourseId: "bca-ds-ai-ibm",
     pitchAngle:
-      "A regular BCA gets you into software roles. BCA with IBM's Data Science & AI track gets you into the roles companies are actively struggling to fill right now. The base curriculum is the same — you're just adding a layer that the market is paying a premium for.",
+      "A regular BCA gets you into software roles. BCA with IBM's Data Science & AI track gets you into the roles companies are actively struggling to fill. The base curriculum is the same — you're just adding a layer that the market is paying a premium for.",
   },
 
+  // Category: BBA
   bba: {
     destinationCourseId: "bba-analytics-ibm",
     pitchAngle:
@@ -440,27 +455,38 @@ export const signalToStrengths: Record<string, Record<string, string[]>> = {
     "style:logical": ["Hands-on labs in OS, networking, databases, and cloud"],
     "style:mixed": ["Broad software engineering foundation covering systems, networks, and security"],
   },
+  "cse-aiml": {
+    "interest:building": ["Industry projects from year 2 onwards", "Strong pipeline to AI-first startups and product companies"],
+    "interest:analyzing": ["Specialised curriculum covering deep learning, NLP, and computer vision", "Dedicated AI/ML lab with GPU clusters for hands-on model training"],
+    "interest:both": ["Specialised curriculum covering deep learning, NLP, and computer vision", "Strong pipeline to AI-first startups and product companies"],
+    "goal:research": ["Dedicated AI/ML lab with GPU clusters for hands-on model training", "Specialised curriculum covering deep learning, NLP, and computer vision"],
+    "goal:industry": ["Strong pipeline to AI-first startups and product companies", "Industry projects from year 2 onwards"],
+    "goal:startup": ["Strong pipeline to AI-first startups and product companies"],
+    "style:creative": ["Specialised curriculum covering deep learning, NLP, and computer vision"],
+    "style:logical": ["Dedicated AI/ML lab with GPU clusters for hands-on model training"],
+    "style:mixed": ["Specialised curriculum covering deep learning, NLP, and computer vision"],
+  },
+  "cse-core-google": {
+    "interest:building": ["Google Cloud certification pathway embedded across all 4 years"],
+    "interest:analyzing": ["Research exposure through IIT KGP joint lab access"],
+    "interest:both": ["Curriculum co-designed with IIT Kharagpur"],
+    "goal:research": ["Research exposure through IIT KGP joint lab access", "Curriculum co-designed with IIT Kharagpur"],
+    "goal:industry": ["Top-tier placement outcomes via combined industry-academia network", "Google Cloud certification pathway embedded across all 4 years"],
+    "goal:startup": ["Google Cloud certification pathway embedded across all 4 years"],
+    "style:creative": ["Google Cloud certification pathway embedded across all 4 years"],
+    "style:logical": ["Curriculum co-designed with IIT Kharagpur"],
+    "style:mixed": ["Curriculum co-designed with IIT Kharagpur"],
+  },
   "cse-google-iit": {
     "interest:building": ["Live project exposure on Google Cloud Platform from year 2", "Google Cloud certifications integrated into the curriculum"],
     "interest:analyzing": ["Joint modules designed with IIT Kharagpur faculty"],
     "interest:both": ["Google Cloud certifications integrated into the curriculum", "Joint modules designed with IIT Kharagpur faculty"],
     "goal:research": ["Joint modules designed with IIT Kharagpur faculty"],
     "goal:industry": ["Preferred hiring pipeline with Google Cloud partner companies", "Live project exposure on Google Cloud Platform from year 2"],
-    "goal:startup": ["Google Cloud certifications integrated into the curriculum", "Live project exposure on Google Cloud Platform from year 2"],
+    "goal:startup": ["Google Cloud certifications integrated into the curriculum"],
     "style:creative": ["Live project exposure on Google Cloud Platform from year 2"],
-    "style:logical": ["Joint modules designed with IIT Kharagpur faculty", "Google Cloud certifications integrated into the curriculum"],
+    "style:logical": ["Joint modules designed with IIT Kharagpur faculty"],
     "style:mixed": ["Google Cloud certifications integrated into the curriculum"],
-  },
-  "cse-aiml": {
-    "interest:building": ["Industry projects from year 2 onwards", "Strong pipeline to AI-first startups and product companies"],
-    "interest:analyzing": ["Specialised curriculum covering deep learning, NLP, and computer vision", "Dedicated AI/ML lab with GPU clusters for model training"],
-    "interest:both": ["Specialised curriculum covering deep learning, NLP, and computer vision", "Strong pipeline to AI-first startups and product companies"],
-    "goal:research": ["Dedicated AI/ML lab with GPU clusters for model training", "Specialised curriculum covering deep learning, NLP, and computer vision"],
-    "goal:industry": ["Strong pipeline to AI-first startups and product companies", "Industry projects from year 2 onwards"],
-    "goal:startup": ["Strong pipeline to AI-first startups and product companies"],
-    "style:creative": ["Specialised curriculum covering deep learning, NLP, and computer vision"],
-    "style:logical": ["Dedicated AI/ML lab with GPU clusters for model training"],
-    "style:mixed": ["Specialised curriculum covering deep learning, NLP, and computer vision"],
   },
   "cse-aiml-google": {
     "interest:building": ["Live project deployments on Google Cloud infrastructure", "AI/ML curriculum enhanced with Google Cloud AI tools and certification tracks"],
@@ -468,7 +494,7 @@ export const signalToStrengths: Record<string, Record<string, string[]>> = {
     "interest:both": ["AI/ML curriculum enhanced with Google Cloud AI tools and certification tracks", "Hands-on VertexAI, BigQuery ML, and TensorFlow on GCP"],
     "goal:research": ["Hands-on VertexAI, BigQuery ML, and TensorFlow on GCP"],
     "goal:industry": ["Premium hiring access to Google Cloud partner ecosystem", "Live project deployments on Google Cloud infrastructure"],
-    "goal:startup": ["Live project deployments on Google Cloud infrastructure", "AI/ML curriculum enhanced with Google Cloud AI tools and certification tracks"],
+    "goal:startup": ["Live project deployments on Google Cloud infrastructure"],
     "style:creative": ["AI/ML curriculum enhanced with Google Cloud AI tools and certification tracks"],
     "style:logical": ["Hands-on VertexAI, BigQuery ML, and TensorFlow on GCP"],
     "style:mixed": ["AI/ML curriculum enhanced with Google Cloud AI tools and certification tracks"],
@@ -490,21 +516,10 @@ export const signalToStrengths: Record<string, Record<string, string[]>> = {
     "interest:both": ["Deep specialisation in cloud architecture, DevOps, and distributed systems"],
     "goal:research": ["Industry certifications embedded into coursework"],
     "goal:industry": ["Strong placement pipeline to cloud and infrastructure companies", "Industry certifications embedded into coursework"],
-    "goal:startup": ["Multi-cloud exposure: AWS, Azure, and Google Cloud in the curriculum", "Deep specialisation in cloud architecture, DevOps, and distributed systems"],
+    "goal:startup": ["Multi-cloud exposure: AWS, Azure, and Google Cloud in the curriculum"],
     "style:creative": ["Deep specialisation in cloud architecture, DevOps, and distributed systems"],
     "style:logical": ["Deep specialisation in cloud architecture, DevOps, and distributed systems", "Industry certifications embedded into coursework"],
     "style:mixed": ["Multi-cloud exposure: AWS, Azure, and Google Cloud in the curriculum"],
-  },
-  "cse-core-google": {
-    "interest:building": ["Google Cloud certification pathway embedded across all 4 years", "Live project deployments on Google Cloud infrastructure"],
-    "interest:analyzing": ["Research exposure through IIT KGP joint lab access"],
-    "interest:both": ["Curriculum co-designed with IIT Kharagpur — the gold standard in Indian engineering education"],
-    "goal:research": ["Research exposure through IIT KGP joint lab access", "Curriculum co-designed with IIT Kharagpur — the gold standard in Indian engineering education"],
-    "goal:industry": ["Top-tier placement outcomes via combined industry-academia network", "Google Cloud certification pathway embedded across all 4 years"],
-    "goal:startup": ["Google Cloud certification pathway embedded across all 4 years"],
-    "style:creative": ["Google Cloud certification pathway embedded across all 4 years"],
-    "style:logical": ["Curriculum co-designed with IIT Kharagpur — the gold standard in Indian engineering education"],
-    "style:mixed": ["Curriculum co-designed with IIT Kharagpur — the gold standard in Indian engineering education"],
   },
   bca: {
     "interest:building": ["Practical, application-focused curriculum for quick industry entry", "Strong programming and web development foundation"],
@@ -518,7 +533,7 @@ export const signalToStrengths: Record<string, Record<string, string[]>> = {
     "style:mixed": ["Active placement support from year 2"],
   },
   "bca-ds-ai-ibm": {
-    "interest:building": ["Hands-on IBM Watson and IBM Cloud projects", "AI Applications Development"],
+    "interest:building": ["Hands-on IBM Watson and IBM Cloud projects"],
     "interest:analyzing": ["IBM-certified AI and Data Science modules built into the degree", "Practical AI skills without a 4-year B.Tech commitment"],
     "interest:both": ["IBM-certified AI and Data Science modules built into the degree", "Hands-on IBM Watson and IBM Cloud projects"],
     "goal:research": ["IBM-certified AI and Data Science modules built into the degree"],
