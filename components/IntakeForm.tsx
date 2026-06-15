@@ -77,10 +77,22 @@ export default function IntakeForm() {
       <div className="-mt-4 rounded-t-3xl bg-white flex-1 px-5 pt-7 pb-10">
         <div className="max-w-xl mx-auto space-y-8">
 
+          {!selectedCourse ? (
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center mb-4">
+                <svg className="w-7 h-7 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
+                </svg>
+              </div>
+              <p className="text-slate-500 font-medium text-sm">Select a programme above</p>
+              <p className="text-slate-400 text-xs mt-1">A few quick questions will follow</p>
+            </div>
+          ) : (
+          <>
           <div className="flex items-center gap-3">
             <div className="flex-1 h-px bg-slate-100" />
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest whitespace-nowrap">
-              Tell us a bit more
+              3 quick questions
             </p>
             <div className="flex-1 h-px bg-slate-100" />
           </div>
@@ -114,16 +126,16 @@ export default function IntakeForm() {
           ))}
 
           {/* Progress */}
-          {(selectedCourse || completedSignals > 0) && (
+          {completedSignals > 0 && (
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs text-slate-400">
-                <span>{(selectedCourse ? 1 : 0) + completedSignals} of {1 + signals.length} answered</span>
+                <span>{completedSignals} of {signals.length} answered</span>
                 {isComplete && <span className="text-teal-600 font-semibold">Ready!</span>}
               </div>
               <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-teal-500 rounded-full transition-all duration-500 ease-out"
-                  style={{ width: `${((selectedCourse ? 1 : 0) + completedSignals) / (1 + signals.length) * 100}%` }}
+                  style={{ width: `${completedSignals / signals.length * 100}%` }}
                 />
               </div>
             </div>
@@ -140,8 +152,10 @@ export default function IntakeForm() {
                 : "bg-slate-100 text-slate-400 cursor-not-allowed"
             )}
           >
-            {isComplete ? "Find My Best Fit →" : "Answer all questions to continue"}
+            {isComplete ? "Find My Best Fit →" : "Answer all 3 questions to continue"}
           </button>
+          </>
+          )}
         </div>
       </div>
     </div>

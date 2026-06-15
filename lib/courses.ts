@@ -536,29 +536,29 @@ export const routeMap: RouteMap = {
 export const signals: Signal[] = [
   {
     key: "interest",
-    question: "I'm most drawn to:",
+    question: "In school, which of these did you enjoy more?",
     options: [
-      { value: "building", label: "Building products & systems" },
-      { value: "analyzing", label: "Analysing data & spotting patterns" },
-      { value: "both", label: "Both — I want the full picture" },
+      { value: "building", label: "Making things — apps, projects, experiments" },
+      { value: "analyzing", label: "Finding patterns — maths, stats, puzzles" },
+      { value: "both", label: "Honestly, both equally" },
     ],
   },
   {
     key: "goal",
-    question: "After graduation, I see myself:",
+    question: "What's your dream after finishing college?",
     options: [
-      { value: "research", label: "Doing research or going for a masters" },
-      { value: "industry", label: "Working at a top company" },
-      { value: "startup", label: "Building my own startup" },
+      { value: "research", label: "Go for a Master's degree or do research" },
+      { value: "industry", label: "Get a job at a well-known company" },
+      { value: "startup", label: "Start my own business or app" },
     ],
   },
   {
     key: "style",
-    question: "My approach to problems:",
+    question: "When you get stuck on something, you usually:",
     options: [
-      { value: "creative", label: "Creative — I like design & expression" },
-      { value: "logical", label: "Logical — I like proofs & precision" },
-      { value: "mixed", label: "Depends on the problem" },
+      { value: "creative", label: "Try a completely new angle or idea" },
+      { value: "logical", label: "Break it down step by step" },
+      { value: "mixed", label: "Depends on the situation" },
     ],
   },
 ];
