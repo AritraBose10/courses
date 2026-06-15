@@ -145,15 +145,25 @@ export default function ResultsView() {
       {/* Hero */}
       <div className="bg-gradient-to-br from-teal-700 via-teal-800 to-teal-950 text-white px-5 pt-8 pb-14">
         <div className="max-w-xl mx-auto">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-1.5 text-teal-300 hover:text-white text-sm mb-6 transition-colors duration-150 cursor-pointer"
-          >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            Start over
-          </Link>
+          {/* Brand + back nav */}
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <img src="/tiu-logo.svg" alt="TIU" className="w-9 h-9 shrink-0" />
+              <div>
+                <p className="text-white font-bold text-sm leading-tight tracking-wide">Techno India University</p>
+                <p className="text-teal-300 text-[10px] font-semibold tracking-widest uppercase mt-0.5">Course Finder</p>
+              </div>
+            </div>
+            <Link
+              href="/"
+              className="inline-flex items-center gap-1.5 text-teal-300 hover:text-white text-sm transition-colors duration-150 cursor-pointer"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              Start over
+            </Link>
+          </div>
 
           {/* Badges */}
           <div className="flex flex-wrap items-center gap-2 mb-4">

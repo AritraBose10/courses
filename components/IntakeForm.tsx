@@ -32,13 +32,12 @@ export default function IntakeForm() {
         <div className="max-w-xl mx-auto">
 
           {/* Brand */}
-          <div className="flex items-center gap-2.5 mb-8">
-            <div className="w-7 h-7 rounded-lg bg-white/20 border border-white/30 flex items-center justify-center">
-              <span className="text-white text-xs font-black">TI</span>
+          <div className="flex items-center gap-3 mb-8">
+            <img src="/tiu-logo.svg" alt="TIU" className="w-10 h-10 shrink-0" />
+            <div>
+              <p className="text-white font-bold text-sm leading-tight tracking-wide">Techno India University</p>
+              <p className="text-teal-300 text-[10px] font-semibold tracking-widest uppercase mt-0.5">Course Finder</p>
             </div>
-            <span className="text-teal-200 text-xs font-semibold tracking-widest uppercase">
-              Techno India University
-            </span>
           </div>
 
           {/* Headline */}
