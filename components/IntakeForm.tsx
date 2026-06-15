@@ -182,8 +182,8 @@ function CourseCombobox({
   const normalise = (s: string) =>
     s.toLowerCase().replace(/b\.?\s*tech/g, "btech").replace(/\s+/g, " ").trim();
 
-  const suggestions = query.trim() === ""
-    ? SELECTABLE_COURSES
+  const suggestions = query.trim().length < 2
+    ? []
     : SELECTABLE_COURSES.filter((c) => {
         const haystack = normalise(`${c.name} ${c.degree}`);
         return normalise(query)
@@ -283,7 +283,7 @@ function CourseCombobox({
       </div>
 
       {/* Suggestion list */}
-      {open && (
+      {open && (query.trim().length >= 2 || suggestions.length > 0) && (
         <ul className="absolute left-0 right-0 mt-1.5 bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden z-50">
           {suggestions.length === 0 ? (
             <li className="px-4 py-3 text-sm text-slate-400 italic">No matching programmes</li>
