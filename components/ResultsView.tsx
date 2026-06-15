@@ -2,7 +2,103 @@
 
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { courses, resolveRoute, signalToStrengths, signals } from "@/lib/courses";
+import { courses, resolveRoute, signalToStrengths, signals, Course } from "@/lib/courses";
+
+function SaturationPill({ level }: { level: "Low" | "Medium" | "High" }) {
+  const config = {
+    Low: { dot: "bg-emerald-500", text: "text-emerald-700", bg: "bg-emerald-50 border-emerald-200", label: "Low saturation" },
+    Medium: { dot: "bg-amber-500", text: "text-amber-700", bg: "bg-amber-50 border-amber-200", label: "Medium saturation" },
+    High: { dot: "bg-red-400", text: "text-red-600", bg: "bg-red-50 border-red-200", label: "High saturation" },
+  }[level];
+  return (
+    <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[10px] font-bold ${config.bg} ${config.text} w-fit`}>
+      <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${config.dot}`} />
+      {config.label}
+    </div>
+  );
+}
+
+function StatLabel({ children }: { children: React.ReactNode }) {
+  return <p className="text-[9px] font-semibold text-slate-400 uppercase tracking-wide mb-1">{children}</p>;
+}
+
+function CompareCard({
+  label, labelBg, labelColor, border, course, chipBg, salaryColor, textColor, cta,
+}: {
+  label: string; labelBg: string; labelColor: string; border: string;
+  course: Course; chipBg: string; salaryColor: string; textColor: string; cta: React.ReactNode;
+}) {
+  const s = course.comparisonStats;
+  return (
+    <div className={`bg-white rounded-2xl border-2 ${border} shadow-sm flex flex-col overflow-hidden`}>
+      <div className={`${labelBg} px-3 py-1.5`}>
+        <span className={`${labelColor} text-[10px] font-bold tracking-wide uppercase`}>{label}</span>
+      </div>
+      <div className="p-3 flex flex-col gap-3">
+        <h3 className="font-bold text-slate-900 text-xs leading-snug">{course.name}</h3>
+
+        {s && (
+          <>
+            <SaturationPill level={s.saturation} />
+
+            <div>
+              <StatLabel>Starting salary</StatLabel>
+              <p className={`text-sm font-bold ${salaryColor}`}>{s.salaryRange}</p>
+            </div>
+
+            <div>
+              <StatLabel>Market signal</StatLabel>
+              <p className={`text-[11px] ${textColor} leading-snug`}>{s.demandSignal}</p>
+            </div>
+
+            <div>
+              <StatLabel>Top roles</StatLabel>
+              <div className="flex flex-wrap gap-1">
+                {s.topRoles.map((r, i) => (
+                  <span key={i} className={`text-[10px] font-medium px-2 py-0.5 rounded-full border ${chipBg}`}>{r}</span>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <StatLabel>Career ceiling</StatLabel>
+              <div className="flex flex-wrap gap-1">
+                {s.careerCeiling.map((r, i) => (
+                  <span key={i} className={`text-[10px] font-medium px-2 py-0.5 rounded-full border ${chipBg}`}>{r}</span>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <StatLabel>Who&apos;s hiring</StatLabel>
+              <div className="flex flex-wrap gap-1">
+                {s.topHirers.map((h, i) => (
+                  <span key={i} className={`text-[10px] font-medium px-2 py-0.5 rounded-full border ${chipBg}`}>{h}</span>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <StatLabel>Skills you graduate with</StatLabel>
+              <div className="flex flex-wrap gap-1">
+                {s.keySkills.map((sk, i) => (
+                  <span key={i} className={`text-[10px] font-medium px-2 py-0.5 rounded-full border ${chipBg}`}>{sk}</span>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <StatLabel>Postgrad edge</StatLabel>
+              <p className={`text-[11px] ${textColor} leading-snug italic`}>{s.postgradEdge}</p>
+            </div>
+          </>
+        )}
+
+        {cta}
+      </div>
+    </div>
+  );
+}
 
 export default function ResultsView() {
   const searchParams = useSearchParams();
@@ -131,79 +227,45 @@ export default function ResultsView() {
           {isRedirected ? (
             <section>
               <h2 className="font-bold text-slate-900 text-base mb-1">Head-to-head</h2>
-              <p className="text-xs text-slate-400 mb-5">
-                The first two years are nearly identical. Here&apos;s where they diverge.
+              <p className="text-xs text-slate-400 mb-4">
+                Same first two years. Here&apos;s what changes after that.
               </p>
 
-              {/* Always side-by-side — even on mobile */}
               <div className="grid grid-cols-2 gap-3">
 
                 {/* Recommended card */}
-                <div className="bg-white rounded-2xl border-2 border-teal-500 shadow-sm flex flex-col overflow-hidden">
-                  <div className="bg-teal-600 px-3 py-1.5">
-                    <span className="text-white text-[10px] font-bold tracking-wide uppercase">
-                      Recommended
-                    </span>
-                  </div>
-                  <div className="p-3 flex flex-col flex-1 gap-3">
-                    <h3 className="font-bold text-slate-900 text-xs leading-snug">
-                      {recommendedCourse.name}
-                    </h3>
-                    <ul className="space-y-1.5 flex-1">
-                      {recommendedCourse.curriculumHighlights.map((h, i) => (
-                        <li key={i} className="flex items-start gap-1.5">
-                          <span className="w-1 h-1 rounded-full bg-teal-500 shrink-0 mt-1.5" />
-                          <span className="text-[11px] text-slate-700 leading-snug">{h}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    {recommendedCourse.overlapNote && (
-                      <p className="text-[10px] text-teal-800 bg-teal-50 rounded-lg px-2 py-1.5 leading-snug">
-                        {recommendedCourse.overlapNote}
-                      </p>
-                    )}
-                    <a
-                      href="#apply"
-                      id="apply"
-                      className="block w-full text-center bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 rounded-lg transition-all duration-200 text-xs cursor-pointer"
-                    >
+                <CompareCard
+                  label="Recommended"
+                  labelBg="bg-teal-600"
+                  labelColor="text-white"
+                  border="border-teal-500"
+                  course={recommendedCourse}
+                  chipBg="bg-teal-50 border-teal-200 text-teal-800"
+                  salaryColor="text-teal-700"
+                  textColor="text-slate-700"
+                  cta={
+                    <a href="#apply" id="apply" className="block w-full text-center bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 rounded-lg transition-all duration-200 text-xs cursor-pointer">
                       Apply →
                     </a>
-                  </div>
-                </div>
+                  }
+                />
 
                 {/* Original choice card */}
-                <div className="bg-white rounded-2xl border-2 border-slate-200 flex flex-col overflow-hidden">
-                  <div className="bg-slate-100 px-3 py-1.5">
-                    <span className="text-slate-500 text-[10px] font-bold tracking-wide uppercase">
-                      Your pick
-                    </span>
-                  </div>
-                  <div className="p-3 flex flex-col flex-1 gap-3">
-                    <h3 className="font-bold text-slate-600 text-xs leading-snug">
-                      {sourceCourse.name}
-                    </h3>
-                    <ul className="space-y-1.5 flex-1">
-                      {sourceCourse.curriculumHighlights.map((h, i) => (
-                        <li key={i} className="flex items-start gap-1.5">
-                          <span className="w-1 h-1 rounded-full bg-slate-400 shrink-0 mt-1.5" />
-                          <span className="text-[11px] text-slate-500 leading-snug">{h}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    {sourceCourse.overlapNote && (
-                      <p className="text-[10px] text-slate-500 bg-slate-50 rounded-lg px-2 py-1.5 leading-snug">
-                        {sourceCourse.overlapNote}
-                      </p>
-                    )}
-                    <a
-                      href="#"
-                      className="block w-full text-center border-2 border-slate-200 hover:border-teal-400 text-slate-500 hover:text-teal-700 font-semibold py-2 rounded-lg transition-all duration-200 text-xs cursor-pointer"
-                    >
+                <CompareCard
+                  label="Your pick"
+                  labelBg="bg-slate-100"
+                  labelColor="text-slate-500"
+                  border="border-slate-200"
+                  course={sourceCourse}
+                  chipBg="bg-slate-50 border-slate-200 text-slate-500"
+                  salaryColor="text-slate-500"
+                  textColor="text-slate-500"
+                  cta={
+                    <a href="#" className="block w-full text-center border-2 border-slate-200 hover:border-teal-400 text-slate-500 hover:text-teal-700 font-semibold py-2 rounded-lg transition-all duration-200 text-xs cursor-pointer">
                       Apply
                     </a>
-                  </div>
-                </div>
+                  }
+                />
 
               </div>
             </section>

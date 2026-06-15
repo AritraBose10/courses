@@ -7,6 +7,17 @@ export interface PlacementStats {
   topRecruiters?: string[];
 }
 
+export interface ComparisonStats {
+  topRoles: string[];
+  demandSignal: string;
+  saturation: "Low" | "Medium" | "High";
+  salaryRange: string;
+  careerCeiling: string[];
+  topHirers: string[];
+  keySkills: string[];
+  postgradEdge: string;
+}
+
 export interface Course {
   id: string;
   name: string;
@@ -18,6 +29,7 @@ export interface Course {
   faculty?: string[];
   curriculumHighlights: string[];
   overlapNote?: string;
+  comparisonStats?: ComparisonStats;
 }
 
 export interface SignalCondition {
@@ -68,7 +80,7 @@ export const courses: Course[] = [
 
   {
     id: "cse",
-    name: "Regular CSE",
+    name: "CSE",
     degree: "B.Tech Computer Science (CSE)",
     tagline: "Build the systems that power the world",
     realStrengths: [
@@ -89,11 +101,21 @@ export const courses: Course[] = [
     ],
     overlapNote:
       "90% shared core with CSE (Google Cloud & IIT KGP) in years 1–2. Industry exposure is the key differentiator from year 3.",
+    comparisonStats: {
+      topRoles: ["Software Engineer", "Backend Developer", "DevOps Engineer", "Systems Analyst"],
+      demandSignal: "60,000+ openings — large pool, intense competition",
+      saturation: "High",
+      salaryRange: "₹5–8 LPA",
+      careerCeiling: ["Engineering Manager", "Tech Lead", "CTO (long path)"],
+      topHirers: ["TCS", "Infosys", "Wipro", "Accenture"],
+      keySkills: ["Full-Stack Dev", "System Design", "DSA", "Networking"],
+      postgradEdge: "GATE/GRE eligible — needs strong prep to stand out",
+    },
   },
 
   {
     id: "cse-aiml",
-    name: "Regular CSE AI-ML",
+    name: "CSE AI-ML",
     degree: "B.Tech Computer Science (CSE)",
     tagline: "Engineer the intelligence of tomorrow",
     realStrengths: [
@@ -114,6 +136,16 @@ export const courses: Course[] = [
     ],
     overlapNote:
       "75% shared core with CSE Data Science in years 1–2. Data Science diverges strongly from year 3 with statistics and business analytics focus.",
+    comparisonStats: {
+      topRoles: ["ML Engineer", "AI Developer", "Data Engineer", "Research Engineer"],
+      demandSignal: "AI roles tripled since 2022 — still undersupplied",
+      saturation: "Medium",
+      salaryRange: "₹8–14 LPA",
+      careerCeiling: ["ML Lead", "AI Research Lead", "Head of AI"],
+      topHirers: ["Flipkart", "Uber", "Swiggy", "AI Startups"],
+      keySkills: ["PyTorch", "TensorFlow", "Deep Learning", "NLP"],
+      postgradEdge: "Competitive for MS in AI/ML at top universities",
+    },
   },
 
   {
@@ -139,13 +171,23 @@ export const courses: Course[] = [
     ],
     overlapNote:
       "Shares the same foundational engineering core as Regular CSE in years 1–2. IIT KGP modules and Google Cloud track activate from semester 3.",
+    comparisonStats: {
+      topRoles: ["Cloud Engineer", "Platform Engineer", "Solutions Architect", "Research Engineer"],
+      demandSignal: "Cloud + IIT pedigree: rare combination, top-bracket offers",
+      saturation: "Low",
+      salaryRange: "₹10–18 LPA",
+      careerCeiling: ["Cloud Architect", "Principal Engineer", "VP Engineering"],
+      topHirers: ["Google", "Amazon AWS", "Microsoft", "Deloitte"],
+      keySkills: ["GCP Certified", "Cloud Architecture", "IIT-grade Systems", "DevOps"],
+      postgradEdge: "IIT KGP affiliation directly strengthens MS/MTech applications",
+    },
   },
 
   // ── BCA: source courses ────────────────────────────────────────────────────
 
   {
     id: "bca",
-    name: "Regular BCA",
+    name: "BCA",
     degree: "Bachelor of Computer Applications (BCA)",
     tagline: "Your launchpad into the software world",
     realStrengths: [
@@ -166,13 +208,23 @@ export const courses: Course[] = [
     ],
     overlapNote:
       "80% shared core with BCA Data Science & AI (IBM) in years 1–2. The IBM specialisation diverges from semester 4.",
+    comparisonStats: {
+      topRoles: ["Junior Developer", "Web Developer", "QA Analyst", "IT Support"],
+      demandSignal: "High volume of entry roles — salary ceiling is modest",
+      saturation: "High",
+      salaryRange: "₹3–5 LPA",
+      careerCeiling: ["Senior Developer (10+ yrs)", "Team Lead", "Project Manager"],
+      topHirers: ["Cognizant", "HCL", "Mphasis", "Mid-tier IT firms"],
+      keySkills: ["Web Dev", "Java/Python basics", "Database", "Testing"],
+      postgradEdge: "MCA pathway available — adds 2 years for senior roles",
+    },
   },
 
   // ── BBA: source courses ────────────────────────────────────────────────────
 
   {
     id: "bba",
-    name: "Regular BBA",
+    name: "BBA",
     degree: "Bachelor of Business Administration (BBA)",
     tagline: "Develop the business mind of tomorrow",
     realStrengths: [
@@ -193,6 +245,16 @@ export const courses: Course[] = [
     ],
     overlapNote:
       "85% shared core with BBA Business Analytics (IBM) in years 1–2. Analytics specialisation diverges strongly in year 3.",
+    comparisonStats: {
+      topRoles: ["Management Trainee", "Sales Executive", "HR Executive", "Operations Analyst"],
+      demandSignal: "Generalist roles abundant — competition extremely high",
+      saturation: "High",
+      salaryRange: "₹3–5 LPA",
+      careerCeiling: ["Senior Manager (8–12 yrs)", "Regional Head", "Director (needs MBA)"],
+      topHirers: ["FMCG firms", "Banks", "Retail chains", "Consulting firms"],
+      keySkills: ["Marketing", "Finance basics", "HR", "Operations"],
+      postgradEdge: "MBA almost mandatory for leadership roles — plan for it",
+    },
   },
 
   // ── B.Tech CSE: target courses (not shown in dropdown) ────────────────────
@@ -220,6 +282,16 @@ export const courses: Course[] = [
     ],
     overlapNote:
       "90% shared core with Regular CSE in years 1–2. Diverges from semester 5 with Google Cloud and IIT KGP specialisation modules.",
+    comparisonStats: {
+      topRoles: ["Cloud Engineer", "Solutions Architect", "DevOps Lead", "Platform Engineer"],
+      demandSignal: "Cloud roles growing 28% YoY — market is undersupplied",
+      saturation: "Low",
+      salaryRange: "₹9–16 LPA",
+      careerCeiling: ["Cloud Architect", "Principal Engineer", "VP Engineering"],
+      topHirers: ["Google", "Amazon AWS", "Microsoft", "Deloitte Cloud"],
+      keySkills: ["GCP Certified", "Cloud Architecture", "IIT-grade Systems", "DevOps"],
+      postgradEdge: "IIT KGP collaboration directly strengthens MS/MTech applications",
+    },
   },
 
   {
@@ -245,6 +317,16 @@ export const courses: Course[] = [
     ],
     overlapNote:
       "Shares ~85% core with Regular CSE AI-ML in years 1–2. Google Cloud track adds deployment and productionisation skills unavailable in the base programme.",
+    comparisonStats: {
+      topRoles: ["MLOps Engineer", "AI Cloud Specialist", "ML Infrastructure Engineer", "AI Product Manager"],
+      demandSignal: "AI + Cloud hybrid: least saturated, highest salary premium",
+      saturation: "Low",
+      salaryRange: "₹12–20 LPA",
+      careerCeiling: ["AI Architect", "Head of AI Platform", "Principal AI Engineer"],
+      topHirers: ["Google", "Microsoft", "Amazon", "Meta AI"],
+      keySkills: ["VertexAI", "MLOps", "GCP Certified", "TF on Cloud"],
+      postgradEdge: "GCP experience is a strong differentiator for US/UK MS AI programs",
+    },
   },
 
   {
@@ -270,6 +352,16 @@ export const courses: Course[] = [
     ],
     overlapNote:
       "75% shared core with CSE AI-ML in years 1–2. Diverges strongly from year 3 with analytics and domain focus.",
+    comparisonStats: {
+      topRoles: ["Data Scientist", "Business Analyst", "Analytics Lead", "Research Analyst"],
+      demandSignal: "Data science hiring up 40% — analytics premium is real",
+      saturation: "Medium",
+      salaryRange: "₹7–13 LPA",
+      careerCeiling: ["Chief Data Officer", "Analytics Director", "Data Strategy Lead"],
+      topHirers: ["McKinsey", "BCG", "Mu Sigma", "KPMG Analytics"],
+      keySkills: ["Statistics", "Python/R", "BI Tools", "Data Storytelling"],
+      postgradEdge: "Strong for MS in Data Science or MBA (analytics track)",
+    },
   },
 
   {
@@ -295,6 +387,16 @@ export const courses: Course[] = [
     ],
     overlapNote:
       "80% shared core with CSE AI-ML in years 1–2. Cloud specialisation begins semester 5 with deep infrastructure focus.",
+    comparisonStats: {
+      topRoles: ["Cloud Architect", "Site Reliability Engineer", "Infrastructure Engineer", "DevOps Lead"],
+      demandSignal: "Fastest-growing IT segment in India — certified talent scarce",
+      saturation: "Low",
+      salaryRange: "₹9–18 LPA",
+      careerCeiling: ["Cloud Director", "VP Infrastructure", "CTO"],
+      topHirers: ["Amazon AWS", "Microsoft Azure", "Google Cloud", "Accenture Cloud"],
+      keySkills: ["AWS/Azure/GCP", "Kubernetes", "DevOps", "Cloud Security"],
+      postgradEdge: "Preferred for MS in Cloud/Distributed Systems programs",
+    },
   },
 
   // ── BCA: target courses ────────────────────────────────────────────────────
@@ -322,6 +424,16 @@ export const courses: Course[] = [
     ],
     overlapNote:
       "80% shared core with Regular BCA in years 1–2. IBM AI & Data Science specialisation makes years 2–3 substantially different.",
+    comparisonStats: {
+      topRoles: ["Data Analyst", "AI Associate", "BI Analyst", "Junior Data Scientist"],
+      demandSignal: "IBM certification opens MNC doors — rare at BCA level",
+      saturation: "Low",
+      salaryRange: "₹5–9 LPA",
+      careerCeiling: ["Data Science Lead", "AI Product Analyst", "BI Manager"],
+      topHirers: ["IBM", "Capgemini", "EY Analytics", "Analytics firms"],
+      keySkills: ["IBM Watson", "Python for DS", "Tableau", "ML Basics"],
+      postgradEdge: "IBM certification counts toward MS Data Science admissions",
+    },
   },
 
   // ── BBA: target courses ────────────────────────────────────────────────────
@@ -349,6 +461,16 @@ export const courses: Course[] = [
     ],
     overlapNote:
       "85% shared core with Regular BBA in years 1–2. IBM analytics tools and data-driven modules begin from semester 4.",
+    comparisonStats: {
+      topRoles: ["Business Analyst", "Strategy Analyst", "Marketing Analyst", "Consulting Associate"],
+      demandSignal: "Analytics + business: high demand, short supply at BBA level",
+      saturation: "Low",
+      salaryRange: "₹6–10 LPA",
+      careerCeiling: ["Analytics Manager", "Strategy Lead", "Head of Business Intelligence"],
+      topHirers: ["Deloitte", "PwC", "BCG Platinion", "EY Analytics"],
+      keySkills: ["IBM Cognos", "Data-driven Strategy", "Financial Modelling", "SPSS"],
+      postgradEdge: "Analytics background differentiates MBA applications significantly",
+    },
   },
 ];
 

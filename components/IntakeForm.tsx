@@ -1,13 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { courses, signals } from "@/lib/courses";
 import { cn } from "@/lib/utils";
 
-// Only the "source" courses an applicant can select — the right-side courses
-// are recommendation destinations only and are never shown in the dropdown.
-const SELECTABLE_IDS = ["cse", "cse-aiml", "cse-core-google", "bca", "bba"];
+const SELECTABLE_IDS = ["cse", "cse-aiml", "bca", "bba"];
+const SELECTABLE_COURSES = SELECTABLE_IDS.map((id) => courses.find((c) => c.id === id)!).filter(Boolean);
 
 export default function IntakeForm() {
   const router = useRouter();
@@ -50,39 +49,17 @@ export default function IntakeForm() {
             Tell us what you&apos;re after — we&apos;ll give you a specific, honest recommendation.
           </p>
 
-          {/* Course dropdown */}
+          {/* Combobox */}
           <div className="mt-7">
             <label className="block text-teal-300 text-xs font-semibold mb-2 tracking-wide uppercase">
               Which programme are you considering?
             </label>
-            <div className="relative">
-              <select
-                value={selectedCourse}
-                onChange={(e) => setSelectedCourse(e.target.value)}
-                className="w-full appearance-none bg-white/10 border border-white/25 text-white rounded-xl px-4 py-3.5 pr-10 text-sm font-medium focus:outline-none focus:border-teal-300 focus:bg-white/15 cursor-pointer transition-all duration-200 placeholder:text-teal-300"
-              >
-                <option value="" disabled className="text-slate-800 bg-white">
-                  Select a programme…
-                </option>
-                {SELECTABLE_IDS.map((id) => {
-                  const course = courses.find((c) => c.id === id);
-                  if (!course) return null;
-                  return (
-                    <option key={id} value={id} className="text-slate-900 bg-white font-medium">
-                      {course.name}
-                    </option>
-                  );
-                })}
-              </select>
-              {/* Chevron */}
-              <div className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2">
-                <svg className="w-4 h-4 text-teal-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                </svg>
-              </div>
-            </div>
+            <CourseCombobox
+              selected={selectedCourse}
+              onSelect={(id) => setSelectedCourse(id)}
+            />
 
-            {/* Selected course confirmation chip */}
+            {/* Confirmation chip */}
             {selectedCourseData && (
               <div className="mt-3 flex items-center gap-2">
                 <div className="w-4 h-4 rounded-full bg-teal-400 flex items-center justify-center shrink-0">
@@ -101,7 +78,6 @@ export default function IntakeForm() {
       <div className="-mt-4 rounded-t-3xl bg-white flex-1 px-5 pt-7 pb-10">
         <div className="max-w-xl mx-auto space-y-8">
 
-          {/* Section label */}
           <div className="flex items-center gap-3">
             <div className="flex-1 h-px bg-slate-100" />
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest whitespace-nowrap">
@@ -125,9 +101,7 @@ export default function IntakeForm() {
                       onClick={() => setSelectedSignals((prev) => ({ ...prev, [signal.key]: option.value }))}
                       className={cn(
                         "w-full text-left px-4 py-3 rounded-xl border-2 cursor-pointer transition-all duration-200",
-                        active
-                          ? "border-teal-600 bg-teal-50"
-                          : "border-slate-200 bg-white hover:border-teal-300"
+                        active ? "border-teal-600 bg-teal-50" : "border-slate-200 bg-white hover:border-teal-300"
                       )}
                     >
                       <span className={cn("font-medium text-sm", active ? "text-teal-800" : "text-slate-700")}>
@@ -140,13 +114,11 @@ export default function IntakeForm() {
             </section>
           ))}
 
-          {/* Progress indicator */}
+          {/* Progress */}
           {(selectedCourse || completedSignals > 0) && (
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs text-slate-400">
-                <span>
-                  {(selectedCourse ? 1 : 0) + completedSignals} of {1 + signals.length} answered
-                </span>
+                <span>{(selectedCourse ? 1 : 0) + completedSignals} of {1 + signals.length} answered</span>
                 {isComplete && <span className="text-teal-600 font-semibold">Ready!</span>}
               </div>
               <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
@@ -176,6 +148,160 @@ export default function IntakeForm() {
     </div>
   );
 }
+
+// ── Combobox ──────────────────────────────────────────────────────────────────
+
+function CourseCombobox({
+  selected,
+  onSelect,
+}: {
+  selected: string;
+  onSelect: (id: string) => void;
+}) {
+  const [query, setQuery] = useState("");
+  const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const selectedName = SELECTABLE_COURSES.find((c) => c.id === selected)?.name ?? "";
+
+  // Normalise query: collapse "btech" / "b.tech" / "b tech" → "b.tech" for matching
+  const normalise = (s: string) =>
+    s.toLowerCase().replace(/b\.?\s*tech/g, "btech").replace(/\s+/g, " ").trim();
+
+  const suggestions = query.trim() === ""
+    ? SELECTABLE_COURSES
+    : SELECTABLE_COURSES.filter((c) => {
+        const haystack = normalise(`${c.name} ${c.degree}`);
+        return normalise(query)
+          .split(" ")
+          .filter(Boolean)
+          .every((token) => haystack.includes(token));
+      });
+
+  // Close on outside click
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+        // If nothing confirmed, reset input to show selected name or empty
+        setQuery("");
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setQuery(e.target.value);
+    setOpen(true);
+    // Clear selection if user edits the field
+    if (selected) onSelect("");
+  }
+
+  function handleSelect(id: string) {
+    onSelect(id);
+    setQuery("");
+    setOpen(false);
+    inputRef.current?.blur();
+  }
+
+  function handleFocus() {
+    setOpen(true);
+  }
+
+  function handleKeyDown(e: React.KeyboardEvent) {
+    if (e.key === "Escape") {
+      setOpen(false);
+      setQuery("");
+      inputRef.current?.blur();
+    }
+  }
+
+  // Highlight matching part of a name
+  function highlight(name: string) {
+    if (!query.trim()) return <span>{name}</span>;
+    const idx = name.toLowerCase().indexOf(query.toLowerCase());
+    if (idx === -1) return <span>{name}</span>;
+    return (
+      <>
+        {name.slice(0, idx)}
+        <mark className="bg-teal-200 text-teal-900 rounded-sm">{name.slice(idx, idx + query.length)}</mark>
+        {name.slice(idx + query.length)}
+      </>
+    );
+  }
+
+  return (
+    <div ref={containerRef} className="relative">
+      {/* Input */}
+      <div className="relative">
+        <input
+          ref={inputRef}
+          type="text"
+          value={selected && !open ? selectedName : query}
+          onChange={handleInputChange}
+          onFocus={handleFocus}
+          onKeyDown={handleKeyDown}
+          placeholder="Type to search a programme…"
+          autoComplete="off"
+          className={cn(
+            "w-full bg-white/10 border rounded-xl px-4 py-3.5 pr-10 text-sm font-medium",
+            "placeholder:text-teal-400 focus:outline-none transition-all duration-200",
+            open
+              ? "border-teal-300 bg-white/20 text-white"
+              : selected
+              ? "border-teal-400 bg-white/15 text-white"
+              : "border-white/25 text-white"
+          )}
+        />
+        {/* Icon: check if selected, search otherwise */}
+        <div className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2">
+          {selected && !open ? (
+            <svg className="w-4 h-4 text-teal-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          ) : (
+            <svg className="w-4 h-4 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
+            </svg>
+          )}
+        </div>
+      </div>
+
+      {/* Suggestion list */}
+      {open && (
+        <ul className="absolute left-0 right-0 mt-1.5 bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden z-50">
+          {suggestions.length === 0 ? (
+            <li className="px-4 py-3 text-sm text-slate-400 italic">No matching programmes</li>
+          ) : (
+            suggestions.map((course) => (
+              <li key={course.id}>
+                <button
+                  onMouseDown={(e) => {
+                    e.preventDefault(); // prevent blur before click
+                    handleSelect(course.id);
+                  }}
+                  className={cn(
+                    "w-full text-left px-4 py-3 text-sm transition-colors duration-100 cursor-pointer",
+                    course.id === selected
+                      ? "bg-teal-50 text-teal-800 font-semibold"
+                      : "text-slate-800 hover:bg-slate-50"
+                  )}
+                >
+                  <span className="font-medium">{highlight(course.name)}</span>
+                  <span className="block text-xs text-slate-400 mt-0.5">{course.degree}</span>
+                </button>
+              </li>
+            ))
+          )}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+// ── Step badge ────────────────────────────────────────────────────────────────
 
 function SignalBadge({ n, done }: { n: number; done: boolean }) {
   return (
