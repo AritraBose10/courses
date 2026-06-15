@@ -6,9 +6,9 @@ import { courses, resolveRoute, signalToStrengths, signals, Course } from "@/lib
 
 function SaturationPill({ level }: { level: "Low" | "Medium" | "High" }) {
   const config = {
-    Low: { dot: "bg-emerald-500", text: "text-emerald-700", bg: "bg-emerald-50 border-emerald-200", label: "Low saturation" },
-    Medium: { dot: "bg-amber-500", text: "text-amber-700", bg: "bg-amber-50 border-amber-200", label: "Medium saturation" },
-    High: { dot: "bg-red-400", text: "text-red-600", bg: "bg-red-50 border-red-200", label: "High saturation" },
+    Low: { dot: "bg-emerald-500", text: "text-emerald-700", bg: "bg-emerald-50 border-emerald-200", label: "Easy to get hired" },
+    Medium: { dot: "bg-amber-500", text: "text-amber-700", bg: "bg-amber-50 border-amber-200", label: "Moderate competition" },
+    High: { dot: "bg-red-400", text: "text-red-600", bg: "bg-red-50 border-red-200", label: "Tough to stand out" },
   }[level];
   return (
     <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[10px] font-bold ${config.bg} ${config.text} w-fit`}>
@@ -42,17 +42,17 @@ function CompareCard({
             <SaturationPill level={s.saturation} />
 
             <div>
-              <StatLabel>Starting salary</StatLabel>
+              <StatLabel>What you&apos;ll earn in your first job</StatLabel>
               <p className={`text-sm font-bold ${salaryColor}`}>{s.salaryRange}</p>
             </div>
 
             <div>
-              <StatLabel>Market signal</StatLabel>
+              <StatLabel>Job market reality</StatLabel>
               <p className={`text-[11px] ${textColor} leading-snug`}>{s.demandSignal}</p>
             </div>
 
             <div>
-              <StatLabel>Top roles</StatLabel>
+              <StatLabel>Jobs you can apply for</StatLabel>
               <div className="flex flex-wrap gap-1">
                 {s.topRoles.map((r, i) => (
                   <span key={i} className={`text-[10px] font-medium px-2 py-0.5 rounded-full border ${chipBg}`}>{r}</span>
@@ -61,7 +61,7 @@ function CompareCard({
             </div>
 
             <div>
-              <StatLabel>Career ceiling</StatLabel>
+              <StatLabel>Where you can reach in 10 years</StatLabel>
               <div className="flex flex-wrap gap-1">
                 {s.careerCeiling.map((r, i) => (
                   <span key={i} className={`text-[10px] font-medium px-2 py-0.5 rounded-full border ${chipBg}`}>{r}</span>
@@ -70,7 +70,7 @@ function CompareCard({
             </div>
 
             <div>
-              <StatLabel>Who&apos;s hiring</StatLabel>
+              <StatLabel>Companies that hire from this field</StatLabel>
               <div className="flex flex-wrap gap-1">
                 {s.topHirers.map((h, i) => (
                   <span key={i} className={`text-[10px] font-medium px-2 py-0.5 rounded-full border ${chipBg}`}>{h}</span>
@@ -79,7 +79,7 @@ function CompareCard({
             </div>
 
             <div>
-              <StatLabel>Skills you graduate with</StatLabel>
+              <StatLabel>What you&apos;ll actually learn to do</StatLabel>
               <div className="flex flex-wrap gap-1">
                 {s.keySkills.map((sk, i) => (
                   <span key={i} className={`text-[10px] font-medium px-2 py-0.5 rounded-full border ${chipBg}`}>{sk}</span>
@@ -88,7 +88,7 @@ function CompareCard({
             </div>
 
             <div>
-              <StatLabel>Postgrad edge</StatLabel>
+              <StatLabel>Higher studies after this degree</StatLabel>
               <p className={`text-[11px] ${textColor} leading-snug italic`}>{s.postgradEdge}</p>
             </div>
           </>
