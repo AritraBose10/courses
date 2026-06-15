@@ -148,7 +148,7 @@ export default function ResultsView() {
           {/* Brand + back nav */}
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
-              <img src="/tiu-logo.svg" alt="TIU" className="w-9 h-9 shrink-0" />
+              <img src="/tiu-logo-circle.png" alt="TIU" className="w-9 h-9 shrink-0" />
               <div>
                 <p className="text-white font-bold text-sm leading-tight tracking-wide">Techno India University</p>
                 <p className="text-teal-300 text-[10px] font-semibold tracking-widest uppercase mt-0.5">Course Finder</p>

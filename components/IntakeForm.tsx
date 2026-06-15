@@ -33,7 +33,7 @@ export default function IntakeForm() {
 
           {/* Brand */}
           <div className="flex items-center gap-3 mb-8">
-            <img src="/tiu-logo.svg" alt="TIU" className="w-10 h-10 shrink-0" />
+            <img src="/tiu-logo-circle.png" alt="TIU" className="w-10 h-10 shrink-0" />
             <div>
               <p className="text-white font-bold text-sm leading-tight tracking-wide">Techno India University</p>
               <p className="text-teal-300 text-[10px] font-semibold tracking-widest uppercase mt-0.5">Course Finder</p>
